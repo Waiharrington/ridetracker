@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useStore } from "@/lib/store"
 import { Button } from "@/components/ui/button"
@@ -14,6 +14,14 @@ export default function LoginPage() {
     const [password, setPassword] = useState("")
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
+
+    useEffect(() => {
+        console.log("--- DEBUG INFO ---")
+        console.log("API Key Status:", import.meta.env.VITE_FIREBASE_API_KEY ? "Loaded ✅" : "MISSING ❌")
+        console.log("Auth Domain:", import.meta.env.VITE_FIREBASE_AUTH_DOMAIN)
+        console.log("Project ID:", import.meta.env.VITE_FIREBASE_PROJECT_ID)
+        console.log("------------------")
+    }, [])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
