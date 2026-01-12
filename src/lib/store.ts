@@ -70,13 +70,13 @@ export const useStore = create<AppState>((set, get) => ({
                 set({ dataLoading: true })
 
                 const qRides = query(collection(db, 'rides'), orderBy('createdAt', 'desc'))
-                const unsubRides = onSnapshot(qRides, (snapshot) => {
+                onSnapshot(qRides, (snapshot) => {
                     const rides = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Ride))
                     set({ rides })
                 })
 
                 const qPayments = query(collection(db, 'payments'), orderBy('createdAt', 'desc'))
-                const unsubPayments = onSnapshot(qPayments, (snapshot) => {
+                onSnapshot(qPayments, (snapshot) => {
                     const payments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Payment))
                     set({ payments, dataLoading: false, initialized: true })
                 })

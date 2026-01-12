@@ -23,7 +23,7 @@ export default function LoginPage() {
         try {
             await login(email, password)
             navigate("/")
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error(err)
             setError("Error al iniciar sesión. Verifica tus datos.")
         } finally {
