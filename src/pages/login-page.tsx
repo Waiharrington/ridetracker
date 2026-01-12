@@ -17,9 +17,10 @@ export default function LoginPage() {
 
     useEffect(() => {
         console.log("--- DEBUG INFO ---")
-        console.log("API Key Status:", import.meta.env.VITE_FIREBASE_API_KEY ? "Loaded ✅" : "MISSING ❌")
+        const key = import.meta.env.VITE_FIREBASE_API_KEY || ""
+        console.log("API Key Status:", key ? "Loaded ✅" : "MISSING ❌")
+        console.log("API Key Length:", key.length)
         console.log("Auth Domain:", import.meta.env.VITE_FIREBASE_AUTH_DOMAIN)
-        console.log("Project ID:", import.meta.env.VITE_FIREBASE_PROJECT_ID)
         console.log("------------------")
     }, [])
 
