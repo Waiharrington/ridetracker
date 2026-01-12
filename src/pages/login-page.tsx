@@ -21,10 +21,16 @@ export default function LoginPage() {
         setError("")
 
         try {
+            console.log("Attempting login with:", email);
             await login(email, password)
+            console.log("Login successful");
             navigate("/")
         } catch (err: unknown) {
-            console.error(err)
+            console.error("Login Error Full Object:", err);
+            // @ts-ignore
+            console.error("Login Error Code:", err.code);
+            // @ts-ignore
+            console.error("Login Error Message:", err.message);
             setError("Error al iniciar sesión. Verifica tus datos.")
         } finally {
             setLoading(false)
