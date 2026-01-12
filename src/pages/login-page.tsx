@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useStore } from "@/lib/store"
 import { Button } from "@/components/ui/button"
@@ -15,31 +15,16 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
 
-    useEffect(() => {
-        console.log("--- DEBUG INFO ---")
-        const key = import.meta.env.VITE_FIREBASE_API_KEY || ""
-        console.log("API Key Status:", key ? "Loaded ✅" : "MISSING ❌")
-        console.log("API Key Length:", key.length)
-        console.log("Auth Domain:", import.meta.env.VITE_FIREBASE_AUTH_DOMAIN)
-        console.log("------------------")
-    }, [])
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
         setError("")
 
         try {
-            console.log("Attempting login with:", email);
             await login(email, password)
-            console.log("Login successful");
             navigate("/")
         } catch (err: unknown) {
-            console.error("Login Error Full Object:", err);
-            // @ts-ignore
-            console.error("Login Error Code:", err.code);
-            // @ts-ignore
-            console.error("Login Error Message:", err.message);
+            console.error(err)
             setError("Error al iniciar sesión. Verifica tus datos.")
         } finally {
             setLoading(false)
