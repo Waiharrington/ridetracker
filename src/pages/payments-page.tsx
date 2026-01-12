@@ -1,11 +1,19 @@
 import { useStore } from "@/lib/store"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
-import { Banknote } from "lucide-react"
+import { Banknote, Trash2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function PaymentsPage() {
     const payments = useStore((state) => state.payments)
+    const removePayment = useStore((state) => state.removePayment)
     const sortedPayments = [...payments].sort((a, b) => b.createdAt - a.createdAt)
+
+    const handleDelete = async (id: string) => {
+        if (window.confirm("¿Seguro que quieres borrar este pago?")) {
+            await removePayment(id)
+        }
+    }
 
     return (
         <div className="space-y-4">
@@ -16,7 +24,7 @@ export default function PaymentsPage() {
             ) : (
                 <div className="space-y-3">
                     {sortedPayments.map((payment) => (
-                        <div key={payment.id} className="flex items-center justify-between rounded-lg border bg-card p-4 shadow-sm">
+                        <div key={payment.id} className="flex items-center justify-between rounded-lg border bg-card p-4 shadow-sm group">
                             <div className="flex items-center gap-4">
                                 <div className="rounded-full bg-green-100 text-green-600 p-2">
                                     <Banknote className="h-5 w-5" />
@@ -33,6 +41,14 @@ export default function PaymentsPage() {
                                     )}
                                 </div>
                             </div>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => handleDelete(payment.id)}
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
                         </div>
                     ))}
                 </div>
