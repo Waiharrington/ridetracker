@@ -39,6 +39,11 @@ export default function PaymentsPage() {
                                             {payment.notes}
                                         </p>
                                     )}
+                                    {payment.createdBy && (
+                                        <p className="text-[10px] text-muted-foreground mt-1">
+                                            Por: <span className="font-medium text-foreground">{payment.createdBy}</span>
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                             <Button

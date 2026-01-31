@@ -24,6 +24,7 @@ export interface Ride {
     amount: number
     type: RideType
     description?: string
+    createdBy?: string
     createdAt: number
 }
 
@@ -32,6 +33,7 @@ export interface Payment {
     date: string // ISO string
     amount: number
     notes?: string
+    createdBy?: string
     createdAt: number
 }
 
@@ -46,10 +48,17 @@ interface AppState {
     initializeSubscriptions: () => () => void
     login: (email: string, pass: string) => Promise<void>
     logout: () => Promise<void>
-    addRide: (ride: Omit<Ride, 'id' | 'createdAt'>) => Promise<void>
+    addRide: (ride: Omit<Ride, 'id' | 'createdAt' | 'createdBy'>) => Promise<void>
     removeRide: (id: string) => Promise<void>
-    addPayment: (payment: Omit<Payment, 'id' | 'createdAt'>) => Promise<void>
+    addPayment: (payment: Omit<Payment, 'id' | 'createdAt' | 'createdBy'>) => Promise<void>
     removePayment: (id: string) => Promise<void>
+}
+
+const getUserName = (email: string | null | undefined): string => {
+    if (!email) return "Desconocido"
+    if (email.includes("angelo")) return "Angelo"
+    if (email.includes("waikoloa")) return "Wai"
+    return email.split("@")[0]
 }
 
 export const useStore = create<AppState>((set, get) => ({
@@ -57,15 +66,13 @@ export const useStore = create<AppState>((set, get) => ({
     authLoading: true,
     rides: [],
     payments: [],
-    dataLoading: false, // Changed logic slightly to avoid blocking UI immediately if data isn't needed
+    dataLoading: false,
     initialized: false,
 
     initializeSubscriptions: () => {
-        // Auth Listener
         const unsubAuth = onAuthStateChanged(auth, (user) => {
             set({ user, authLoading: false })
 
-            // If user exists, listen to data
             if (user && !get().initialized) {
                 set({ dataLoading: true })
 
@@ -80,8 +87,6 @@ export const useStore = create<AppState>((set, get) => ({
                     const payments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Payment))
                     set({ payments, dataLoading: false, initialized: true })
                 })
-
-                // Store unsubscribe functions for cleanup if needed in future (simplified for now)
             } else if (!user) {
                 set({ rides: [], payments: [], initialized: false })
             }
@@ -100,8 +105,10 @@ export const useStore = create<AppState>((set, get) => ({
     },
 
     addRide: async (ride) => {
+        const user = get().user
         await addDoc(collection(db, 'rides'), {
             ...ride,
+            createdBy: getUserName(user?.email),
             createdAt: Date.now()
         })
     },
@@ -111,8 +118,10 @@ export const useStore = create<AppState>((set, get) => ({
     },
 
     addPayment: async (payment) => {
+        const user = get().user
         await addDoc(collection(db, 'payments'), {
             ...payment,
+            createdBy: getUserName(user?.email),
             createdAt: Date.now()
         })
     },

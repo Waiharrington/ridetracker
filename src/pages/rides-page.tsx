@@ -45,6 +45,11 @@ export default function RidesPage() {
                                             {ride.description}
                                         </p>
                                     )}
+                                    {ride.createdBy && (
+                                        <p className="text-[10px] text-muted-foreground mt-1">
+                                            Por: <span className="font-medium text-foreground">{ride.createdBy}</span>
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                             <Button

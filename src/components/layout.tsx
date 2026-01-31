@@ -1,9 +1,11 @@
 import { Outlet, useLocation, Link } from "react-router-dom"
 import { LayoutDashboard, CarFront, Banknote, Menu } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useStore } from "@/lib/store"
 
 export default function Layout() {
     const location = useLocation()
+    const store = useStore()
 
     const navItems = [
         { href: "/", label: "Balance", icon: LayoutDashboard },
@@ -19,9 +21,20 @@ export default function Layout() {
                     <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
                         RideTracker
                     </h1>
-                    <button className="text-muted-foreground hover:text-foreground">
-                        <Menu className="h-6 w-6" />
-                    </button>
+                    <div className="relative group">
+                        <button className="text-muted-foreground hover:text-foreground p-2">
+                            <Menu className="h-6 w-6" />
+                        </button>
+                        {/* Simple CSS-only dropdown on hover/focus for simplicity */}
+                        <div className="absolute right-0 top-full mt-1 hidden min-w-[140px] rounded-md border bg-popover text-popover-foreground shadow-md group-hover:block group-focus-within:block">
+                            <button
+                                onClick={() => store.logout()}
+                                className="w-full px-4 py-2 text-left text-sm hover:bg-muted text-destructive font-medium"
+                            >
+                                Cerrar Sesión
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </header>
 
